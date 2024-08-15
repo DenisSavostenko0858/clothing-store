@@ -12,7 +12,7 @@ model Clothes {
   name        String
   description String
   size        String
-  color       String
+  color       String ?
   price       Float
   brandId     Int
   categoryId  Int      
@@ -21,7 +21,8 @@ model Clothes {
   updatedAt   DateTime @updatedAt
 
   category    Category @relation(fields: [categoryId], references: [id])
-  brand    Brand @relation(fields: [brandId], references: [id])
+  brand       Brand @relation(fields: [brandId], references: [id])
+  comments    Comment[] 
 }
 
 model Category {
@@ -34,4 +35,27 @@ model Brand {
   id       Int       @id @default(autoincrement())
   name     String
   clothes  Clothes[] 
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String ?
+  about     String ?
+  comments  Comment[] 
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  clotheId    Int
+  userId      Int
+  rating      Int ?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  clothes     Clothes   @relation(fields: [clotheId], references: [id]) 
+  user        User      @relation(fields: [userId], references: [id]) 
 }
